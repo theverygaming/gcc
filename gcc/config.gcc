@@ -399,6 +399,10 @@ frv*)	cpu_type=frv
 ft32*)	cpu_type=ft32
 	target_has_targetm_common=no
 	;;
+funnyarch*)
+	cpu_type=funnyarch
+	target_has_targetm_common=no
+	;;
 moxie*)	cpu_type=moxie
 	target_has_targetm_common=no
 	;;
@@ -1764,6 +1768,11 @@ ft32-*-elf)
 	gnu_ld=yes
 	tm_file="elfos.h newlib-stdint.h ${tm_file}"
 	tmake_file="${tmake_file} ft32/t-ft32"
+	;;
+funnyarch-*-elf)
+	gas=yes
+	gnu_ld=yes
+	tm_file="elfos.h newlib-stdint.h ${tm_file}"
 	;;
 amdgcn-*-amdhsa)
 	tm_file="elfos.h gcn/gcn-hsa.h gcn/gcn.h newlib-stdint.h"
