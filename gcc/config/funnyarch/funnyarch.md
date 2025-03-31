@@ -27,4 +27,4 @@
   [(set (match_operand:SI 0 "move_dest_operand" "")
         (match_operand:SI 1 "move_src_operand" ""))]
   ""
-  "mov operands[0], operands[1]")
+  "mov %0, %1")
