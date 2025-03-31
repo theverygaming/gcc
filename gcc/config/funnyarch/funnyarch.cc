@@ -75,4 +75,15 @@ funnyarch_print_operand_address (FILE * file, rtx x)
   fprintf (file, "funnyarch_print_operand_address");
 }
 
+#undef TARGET_LEGITIMATE_ADDRESS_P
+#define TARGET_LEGITIMATE_ADDRESS_P	funnyarch_legitimate_address_p
+
+/* Return true if X is a legitimate address for values of mode MODE.
+   STRICT_P says whether strict checking is needed.  */
+bool
+funnyarch_legitimate_address_p (machine_mode mode, rtx x, bool strict_p, code_helper)
+{
+  return true; /* FIXME: stuff */
+}
+
 struct gcc_target targetm = TARGET_INITIALIZER;
