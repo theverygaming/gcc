@@ -1,7 +1,7 @@
 ; Options for the funnyarch port of the compiler.
 
-: Contributed by theverygaming
 ; Copyright (C) 2015-2025 Free Software Foundation, Inc.
+; Contributed by theverygaming
 ;
 ; This file is part of GCC.
 ;
