@@ -53,7 +53,7 @@ int
 funnyarch_initial_elimination_offset (int from, int to)
 {
   // FIXME: broken!
-  return 4;
+  return 0;
 
   gcc_unreachable ();
 }
