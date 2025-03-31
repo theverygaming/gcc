@@ -22,3 +22,9 @@
   [(const_int 0)]
   ""
   "nop")
+
+(define_insn "mov"
+  [(set (match_operand:SI 0 "move_dest_operand" "")
+        (match_operand:SI 1 "move_src_operand" ""))]
+  ""
+  "mov operands[0], operands[1]")
