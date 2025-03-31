@@ -65,7 +65,7 @@ funnyarch_print_operand (FILE * file, rtx x, int code)
   rtx operand = x;
   fprintf (file, "funnyarch_print_operand");
   return;
-  LOSE_AND_RETURN ("unexpected operand", x);
+  //LOSE_AND_RETURN ("unexpected operand", x);
 }
 
 void
