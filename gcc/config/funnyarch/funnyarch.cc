@@ -47,13 +47,65 @@
 
 #include <stdint.h>
 
+/* Compute the size of the local area and the size to be adjusted by the
+ * prologue and epilogue.  */
+
+static void
+funnyarch_compute_frame (void)
+{
+  /* For aligning the local variables.  */
+  int stack_alignment = STACK_BOUNDARY / BITS_PER_UNIT;
+  int padding_locals;
+  int regno;
+
+  /* Padding needed for each element of the frame.  */
+  cfun->machine->local_vars_size = get_frame_size ();
+
+  /* Align to the stack alignment.  */
+  padding_locals = cfun->machine->local_vars_size % stack_alignment;
+  if (padding_locals)
+    padding_locals = stack_alignment - padding_locals;
+
+  cfun->machine->local_vars_size += padding_locals;
+
+  cfun->machine->callee_saved_reg_size = 0;
+
+  /* Save callee-saved registers.  */
+  for (regno = 0; regno < FIRST_PSEUDO_REGISTER; regno++)
+    if (df_regs_ever_live_p (regno) && !call_used_or_fixed_reg_p (regno))
+      cfun->machine->callee_saved_reg_size += 4;
+
+  cfun->machine->size_for_adjusting_sp =
+    0 // crtl->args.pretend_args_size
+    + cfun->machine->local_vars_size
+    + (ACCUMULATE_OUTGOING_ARGS
+      ? (HOST_WIDE_INT) crtl->outgoing_args_size : 0);
+}
 
 /* Implements the macro INITIAL_ELIMINATION_OFFSET */
 int
 funnyarch_initial_elimination_offset (int from, int to)
 {
-  // FIXME: broken!
-  return 0;
+  funnyarch_compute_frame ();
+
+  if (from == ARG_POINTER_REGNUM && to == FRAME_POINTER_REGNUM)
+  {
+    return cfun->machine->callee_saved_reg_size + 2 * UNITS_PER_WORD;
+  }
+
+  if (from == ARG_POINTER_REGNUM && to == STACK_POINTER_REGNUM)
+  {
+    int arg_offset;
+    arg_offset = must_link ()? 2 : 1;
+    return ((cfun->machine->callee_saved_reg_size
+              + arg_offset * UNITS_PER_WORD)
+            + cfun->machine->size_for_adjusting_sp);
+  }
+
+  if ((from == FRAME_POINTER_REGNUM) && (to == STACK_POINTER_REGNUM))
+  {
+    return cfun->machine->size_for_adjusting_sp;
+  }
 
   gcc_unreachable ();
 }
