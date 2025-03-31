@@ -47,6 +47,38 @@
 
 #include <stdint.h>
 
+/* Per-function machine data.  */
+struct GTY (()) machine_function
+{
+  /* Number of bytes saved on the stack for callee saved registers.  */
+  int callee_saved_reg_size;
+
+  /* Number of bytes saved on the stack for local variables.  */
+  int local_vars_size;
+
+  /* The sum of 2 sizes: locals vars and padding byte for saving the
+   * registers.  Used in expand_prologue () and expand_epilogue ().  */
+  int size_for_adjusting_sp;
+};
+
+/* Zero initialization is OK for all current fields.  */
+
+static struct machine_function *
+funnyarch_init_machine_status (void)
+{
+  return ggc_cleared_alloc < machine_function > ();
+}
+
+
+/* The TARGET_OPTION_OVERRIDE worker.
+   All this curently does is set init_machine_status.  */
+static void
+funnyarch_option_override (void)
+{
+  /* Set the per-function-data initializer.  */
+  init_machine_status = funnyarch_init_machine_status;
+}
+
 /* Compute the size of the local area and the size to be adjusted by the
  * prologue and epilogue.  */
 
@@ -80,6 +112,18 @@ funnyarch_compute_frame (void)
     + cfun->machine->local_vars_size
     + (ACCUMULATE_OUTGOING_ARGS
       ? (HOST_WIDE_INT) crtl->outgoing_args_size : 0);
+}
+
+// Must use LINK/UNLINK when...
+// the frame is bigger than 512 bytes so cannot just "SUB" from SP
+// the function actually uses $fp
+
+static int
+must_link (void)
+{
+  int bigframe = (cfun->machine->size_for_adjusting_sp >= 512);
+  return (bigframe || frame_pointer_needed || df_regs_ever_live_p (FUNNYARCH_RFP)
+          || df_regs_ever_live_p (FUNNYARCH_RFP));
 }
 
 /* Implements the macro INITIAL_ELIMINATION_OFFSET */
