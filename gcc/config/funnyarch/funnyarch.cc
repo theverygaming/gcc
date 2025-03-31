@@ -183,3 +183,5 @@ funnyarch_legitimate_address_p (machine_mode mode, rtx x, bool strict_p, code_he
 }
 
 struct gcc_target targetm = TARGET_INITIALIZER;
+
+#include "gt-funnyarch.h"
