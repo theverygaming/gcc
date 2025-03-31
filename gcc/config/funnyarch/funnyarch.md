@@ -24,7 +24,7 @@
   "nop")
 
 (define_insn "mov"
-  [(set (match_operand:SI 0 "move_dest_operand" "")
-        (match_operand:SI 1 "move_src_operand" ""))]
+  [(set (match_operand:SI 0 "register_operand" "=r")
+        (match_operand:SI 1 "register_operand" "=r"))]
   ""
   "mov %0, %1")
