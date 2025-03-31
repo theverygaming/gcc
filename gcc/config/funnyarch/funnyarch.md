@@ -23,8 +23,30 @@
   ""
   "nop")
 
-(define_insn "mov"
+;; Register-to-register move (fixed constraint)
+(define_insn "mov_si"
   [(set (match_operand:SI 0 "register_operand" "=r")
-        (match_operand:SI 1 "register_operand" "=r"))]
+        (match_operand:SI 1 "register_operand" "r"))]
   ""
-  "mov %0, %1")
+  "movrr %0, %1")
+
+;; Immediate to register
+(define_insn "mov_si_imm"
+  [(set (match_operand:SI 0 "register_operand" "=r")
+        (match_operand:SI 1 "immediate_operand" "n"))]
+  ""
+  "movir %0, %1")
+
+;; Memory to register
+(define_insn "mov_si_mem"
+  [(set (match_operand:SI 0 "register_operand" "=r")
+        (match_operand:SI 1 "memory_operand" "m"))]
+  ""
+  "movmr %0, %1")
+
+;; Register to memory
+(define_insn "mov_si_store"
+  [(set (match_operand:SI 0 "memory_operand" "=m")
+        (match_operand:SI 1 "register_operand" "r"))]
+  ""
+  "movrm %0, %1")
