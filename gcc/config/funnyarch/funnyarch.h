@@ -498,4 +498,8 @@ do { \
       asm_fprintf (stream, "-0x800000"); \
   } while (0)
 
+/* On the m68k the return value defaults to D0.  */
+#define FUNCTION_VALUE(VALTYPE, FUNC)  \
+  gen_rtx_REG (TYPE_MODE (VALTYPE), FUNNYARCH_R0)
+
 #endif /* GCC_FUNNYARCH_H */
