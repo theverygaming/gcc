@@ -23,6 +23,30 @@
   ""
   "nop")
 
+
+(define_expand "movsi"
+  [(set (match_operand:SI 0 "general_operand" "")
+        (match_operand:SI 1 "general_operand" ""))
+  ]
+  ""
+  "")
+		
+(define_insn "*movsi_1"
+  [(set (match_operand:SI 0 "move_dest_operand" "")
+        (match_operand:SI 1 "move_src_operand" ""))]
+  ""
+  "* 
+	toy_move_insn (operands[0], operands[1]);
+  ")
+
+(define_insn "*movsi_1"
+  [(set (match_operand:SI 0 "" "")
+        (subreg:SI (match_operand:SI 1 "" "") 0))]
+  ""
+  ;;;;; "%0 = %1\t\t// MOV"
+  "mov\t %1\t %0\t\t;; MOV"
+)
+
 ;; Register-to-register move (fixed constraint)
 (define_insn "mov_si"
   [(set (match_operand:SI 0 "register_operand" "=r")
@@ -77,4 +101,4 @@
   [(set (match_operand:DI 0 "memory_operand" "=m")
         (match_operand:DI 1 "register_operand" "r"))]
   ""
-  "movdrm %0, %1")
+  "movqrm %0, %1")
