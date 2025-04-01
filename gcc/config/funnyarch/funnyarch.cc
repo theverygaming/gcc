@@ -203,6 +203,25 @@ const char* toy_move_insn(rtx dest, rtx src){
   }
 }
 
+// FIXME: all of this is nonsense
+#define FUNNYARCH_FUNCTION_ARG_SIZE(MODE, TYPE)      \
+  ((MODE) != BLKmode ? GET_MODE_SIZE (MODE)     \
+   : (unsigned) int_size_in_bytes (TYPE))
+
+// FIXME: all of this is nonsense
+static void
+funyarch_function_arg_advance (cumulative_args_t cum_v,
+			   const function_arg_info &arg)
+{
+  CUMULATIVE_ARGS *cum = get_cumulative_args (cum_v);
+
+  *cum = (*cum < FUNNYARCH_R7
+	  ? *cum + ((3 + FUNNYARCH_FUNCTION_ARG_SIZE (arg.mode, arg.type)) / 4)
+	  : *cum);
+}
+#undef  TARGET_FUNCTION_ARG_ADVANCE
+#define TARGET_FUNCTION_ARG_ADVANCE     funnyarch_function_arg_advance
+
 
 struct gcc_target targetm = TARGET_INITIALIZER;
 
