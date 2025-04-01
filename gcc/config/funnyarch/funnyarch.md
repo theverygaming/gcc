@@ -88,8 +88,7 @@
     }
   }			
   else{ 
-    if(GET_CODE(op) == CC0 || 
-       GET_CODE(op) == REG || 
+    if(GET_CODE(op) == REG || 
        GET_CODE(op) == SYMBOL_REF || 
        GET_CODE(op) == CONST_INT){  	
       retVal = TRUE;
