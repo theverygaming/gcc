@@ -182,6 +182,136 @@ funnyarch_legitimate_address_p (machine_mode mode, rtx x, bool strict_p, code_he
   return true; /* FIXME: stuff */
 }
 
+
+// https://www.cse.iitb.ac.in/grc/intdocs/gcc-writing-md.html
+
+/************************************************************/
+
+/* This  function takes care  of destination operand of  a `move'
+operation. */
+
+int move_dest_operand(rtx op, enum machine_mode mode){
+  rtx x0;
+  rtx x1, x2;
+  int retVal = FALSE;
+
+  /* If the  mode of operand is not as required  and not equal to
+     `VOIDmode' then return FALSE. */
+
+  if(GET_MODE(op) != mode && mode != VOIDmode)
+    retVal =  FALSE;
+
+  /* If operand is an memory operand. */
+  if(GET_CODE(op) == MEM) {
+    x0 = XEXP(op,0);
+    switch(GET_CODE(x0)) {
+
+      /* If the operand is  an `PLUS' operand and its first child
+         is an `REG' and second one is an `INT', then return
+         TRUE. */
+
+    case PLUS:
+      x1 = XEXP(x0,0);
+      x2 = XEXP(x0,1);
+      if((GET_CODE(x2) == CONST_INT) && (GET_CODE(x1) == REG)) 
+	retVal = TRUE;
+      break;
+				
+      /*  If the  destination  is either  `REG'  or `SYMBOL'  and
+          contain the address of some memory location, then
+          return TRUE. */	 
+      /*		case SYMBOL_REF:*/
+    case REG:
+      retVal = TRUE;		
+      break;
+			
+    default:
+      retVal = FALSE;
+    }
+  }			
+  /*  If the  destination is  either `REG'  or  `SYMBOL_REF' then
+      return TRUE. */
+
+    else if (GET_CODE(op) == REG || GET_CODE(op) == SYMBOL_REF)
+      retVal =  TRUE;
+	
+  return retVal;		
+}
+
+/************************************************************/
+/*  This  function takes  care  of  source  operand of  a  `move'
+    operation. */
+
+int move_src_operand(rtx op,enum machine_mode mode){
+  rtx x0;
+  rtx x1,x2;
+  int retVal= FALSE;
+	
+  /* If the  mode of operand is not as required  and not equal to
+     `VOIDmode' then return FALSE. */
+  if(GET_MODE(op) != mode && mode != VOIDmode)
+    retVal =  FALSE;
+
+  /* If operand is an memory operand. */
+  if(GET_CODE(op) == MEM){
+    x0 = XEXP(op,0);
+    switch(GET_CODE(x0)){
+
+      /* If the operand is  an `PLUS' operand and its first child
+         is an `REG' and second one is an `INT', then return
+         TRUE. */ 
+    case PLUS:
+      x1 = XEXP(x0,0);
+      x2 = XEXP(x0,1);
+      if((GET_CODE(x2) == CONST_INT) && (GET_CODE(x1) == REG)) 
+	retVal = TRUE;
+      break;
+					
+      /* If the destination is `REG' and contain the the address 
+	 of some memory lacation, then return TRUE. */	
+    case REG:
+      retVal = TRUE;		
+      break;
+
+    default:
+      retVal  = FALSE;
+    }
+  }			
+  /* If the destination is `REG' or `SYMBOL_REF' or `CONST_INT',
+     then return TRUE. */
+  else{ 
+    if(GET_CODE(op) == CC0 || 
+       GET_CODE(op) == REG || 
+       GET_CODE(op) == SYMBOL_REF || 
+       GET_CODE(op) == CONST_INT){  	
+      retVal = TRUE;
+    }
+  }
+
+  return retVal;
+}
+
+/************************************************************/
+/*  Function  to  generate  the  assembly  code  for  the  `move'
+    instruction.*/
+const char* toy_move_insn(rtx dest, rtx src){
+  /* If destination is an `REG' operand. */	
+  if (GET_CODE(dest) == REG) {
+    if (GET_CODE(src) == MEM)
+       return "mov\t %M1\t %0\t\t;; MOVE Dest = REG, Src = MEM";
+    else
+       return "mov\t %1\t %0\t\t;; MOVE Dest = REG, Src = REG";
+  }
+	
+  if (GET_CODE(dest) == MEM) {
+    if (GET_CODE(src) == MEM) 
+      return "mov\t %M1\t %M0\t\t;; MOVE Dest = MEM, Src = MEM";
+    else
+      return "mov\t %1\t %M0\t\t;; MOVE Dest = MEM, Src = REG";
+  }
+}
+
+
 struct gcc_target targetm = TARGET_INITIALIZER;
 
 #include "gt-funnyarch.h"
