@@ -210,7 +210,7 @@ const char* toy_move_insn(rtx dest, rtx src){
 
 // FIXME: all of this is nonsense
 static void
-funyarch_function_arg_advance (cumulative_args_t cum_v,
+funnyarch_function_arg_advance (cumulative_args_t cum_v,
 			   const function_arg_info &arg)
 {
   CUMULATIVE_ARGS *cum = get_cumulative_args (cum_v);
