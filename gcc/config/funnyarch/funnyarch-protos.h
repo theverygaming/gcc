@@ -22,6 +22,4 @@ extern int  funnyarch_initial_elimination_offset (int, int);
 extern void funnyarch_print_operand (FILE *, rtx, int);
 extern void funnyarch_print_operand_address (FILE *, rtx);
 
-extern int move_dest_operand(rtx op, enum machine_mode mode);
-extern int move_src_operand(rtx op,enum machine_mode mode);
 extern const char* toy_move_insn(rtx dest, rtx src);

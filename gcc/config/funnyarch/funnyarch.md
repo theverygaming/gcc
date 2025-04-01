@@ -23,6 +23,81 @@
   ""
   "nop")
 
+(define_predicate "move_dest_operand"
+  (match_code "mem,reg,subreg")
+{
+  rtx x0;
+  rtx x1, x2;
+  int retVal = FALSE;
+
+  if(GET_MODE(op) != mode && mode != VOIDmode)
+    retVal =  FALSE;
+
+  if(GET_CODE(op) == MEM) {
+    x0 = XEXP(op,0);
+    switch(GET_CODE(x0)) {
+
+    case PLUS:
+      x1 = XEXP(x0,0);
+      x2 = XEXP(x0,1);
+      if((GET_CODE(x2) == CONST_INT) && (GET_CODE(x1) == REG)) 
+	retVal = TRUE;
+      break;
+
+    case REG:
+      retVal = TRUE;		
+      break;
+			
+    default:
+      retVal = FALSE;
+    }
+  }			
+    else if (GET_CODE(op) == REG || GET_CODE(op) == SYMBOL_REF)
+      retVal =  TRUE;
+	
+  return retVal;	
+})
+
+(define_predicate "move_src_operand"
+  (match_code "mem,reg,subreg")
+{
+  rtx x0;
+  rtx x1,x2;
+  int retVal= FALSE;
+	
+  if(GET_MODE(op) != mode && mode != VOIDmode)
+    retVal =  FALSE;
+
+  if(GET_CODE(op) == MEM){
+    x0 = XEXP(op,0);
+    switch(GET_CODE(x0)){
+
+    case PLUS:
+      x1 = XEXP(x0,0);
+      x2 = XEXP(x0,1);
+      if((GET_CODE(x2) == CONST_INT) && (GET_CODE(x1) == REG)) 
+	retVal = TRUE;
+      break;
+					
+    case REG:
+      retVal = TRUE;		
+      break;
+
+    default:
+      retVal  = FALSE;
+    }
+  }			
+  else{ 
+    if(GET_CODE(op) == CC0 || 
+       GET_CODE(op) == REG || 
+       GET_CODE(op) == SYMBOL_REF || 
+       GET_CODE(op) == CONST_INT){  	
+      retVal = TRUE;
+    }
+  }
+
+  return retVal;
+})
 
 (define_expand "movsi"
   [(set (match_operand:SI 0 "general_operand" "")
