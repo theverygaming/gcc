@@ -206,6 +206,21 @@ const char* toy_move_insn(rtx dest, rtx src){
   }
 }
 
+/* Return the next register to be used to hold a function argument or
+   NULL_RTX if there's no more space.  */
+static rtx
+funnyarch_function_arg (cumulative_args_t cum_v, const function_arg_info &arg)
+{
+  CUMULATIVE_ARGS *cum = get_cumulative_args (cum_v);
+
+  if (*cum < 8) // args in r0-r7
+    return gen_rtx_REG (arg.mode, *cum);
+  else
+    return NULL_RTX;
+}
+#undef  TARGET_FUNCTION_ARG
+#define TARGET_FUNCTION_ARG             funnyarch_function_arg
+
 // FIXME: all of this is nonsense
 #define FUNNYARCH_FUNCTION_ARG_SIZE(MODE, TYPE)      \
   ((MODE) != BLKmode ? GET_MODE_SIZE (MODE)     \
