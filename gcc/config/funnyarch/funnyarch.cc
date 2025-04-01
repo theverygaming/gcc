@@ -79,6 +79,9 @@ funnyarch_option_override (void)
   init_machine_status = funnyarch_init_machine_status;
 }
 
+#undef TARGET_OPTION_OVERRIDE
+#define TARGET_OPTION_OVERRIDE funnyarch_option_override
+
 /* Compute the size of the local area and the size to be adjusted by the
  * prologue and epilogue.  */
 
