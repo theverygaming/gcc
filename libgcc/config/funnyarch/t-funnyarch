@@ -1,0 +1,2 @@
+LIBGCC2_DEBUG_CFLAGS = -g0
+LIBGCC2_CFLAGS += -O2 -Dinhibit_libc

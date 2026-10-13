@@ -1,0 +1,3 @@
+munaligned-access
+Target Mask(UNALIGNED_ACCESS)
+Allow unaligned accesses. Generates far smaller code.
