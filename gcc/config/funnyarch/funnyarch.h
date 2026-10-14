@@ -156,7 +156,7 @@ enum reg_class
 #define ASM_OUTPUT_ALIGN(STREAM,POWER) \
 	fprintf (STREAM, ".align %d\n", (1 << POWER));
 
-#define GLOBAL_ASM_OP "// global: "
+#define GLOBAL_ASM_OP ".global "
 
 #undef TYPE_ASM_OP
 #define TYPE_ASM_OP	"// type: "
