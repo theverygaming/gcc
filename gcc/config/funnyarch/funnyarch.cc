@@ -221,7 +221,7 @@ int funnyarch_initial_elimination_offset(int from, int to) {
     }
   else if (from == FRAME_POINTER_REGNUM && to == STACK_POINTER_REGNUM)
     {
-      ret = cfun->machine->local_vars_size;
+      ret = cfun->machine->size_for_adjusting_sp;
     }
   else if ((from) == ARG_POINTER_REGNUM && (to) == HARD_FRAME_POINTER_REGNUM)
     {
@@ -229,7 +229,7 @@ int funnyarch_initial_elimination_offset(int from, int to) {
     }
   else if (from == ARG_POINTER_REGNUM && to == STACK_POINTER_REGNUM)
     {
-      ret = cfun->machine->call_saved_reg_size + cfun->machine->callee_saved_reg_size + cfun->machine->local_vars_size;
+      ret = cfun->machine->call_saved_reg_size + cfun->machine->callee_saved_reg_size + cfun->machine->size_for_adjusting_sp;
     }
   else
     abort ();
