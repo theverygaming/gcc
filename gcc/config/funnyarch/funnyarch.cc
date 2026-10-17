@@ -728,6 +728,20 @@ funnyarch_hard_regno_mode_ok (unsigned int regno, machine_mode mode)
   return GET_MODE_SIZE (mode) <= UNITS_PER_WORD;
 }
 
+/* Implement TARGET_SLOW_UNALIGNED_ACCESS. */
+
+static bool
+funnyarch_slow_unaligned_access (machine_mode mode, unsigned int align)
+{
+  // unaligned 32-bit or more accesses can actually be done fast if unaligned access is allowed
+  if (!STRICT_ALIGNMENT && GET_MODE_SIZE(mode) >= UNITS_PER_WORD) {
+    return false;
+  }
+
+  // otherwise things are alwys looking pretty grim :c
+  return true;
+}
+
 bool
 funnyarch_can_eliminate (const int from, const int to)
 {
@@ -855,6 +869,9 @@ funnyarch_asm_output_addr_const_extra (FILE *file, rtx x)
 
 #undef TARGET_HARD_REGNO_MODE_OK
 #define TARGET_HARD_REGNO_MODE_OK funnyarch_hard_regno_mode_ok
+
+#undef TARGET_SLOW_UNALIGNED_ACCESS
+#define TARGET_SLOW_UNALIGNED_ACCESS funnyarch_slow_unaligned_access
 
 #undef  TARGET_CONSTANT_ALIGNMENT
 #define TARGET_CONSTANT_ALIGNMENT constant_alignment_word_strings
