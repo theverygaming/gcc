@@ -76,7 +76,11 @@
       if (GET_CODE (operands[1]) != REG) {
         operands[1] = force_reg (HImode, operands[1]);
       }
-      rtx val = gen_lowpart (SImode, operands[1]);
+      // fixes some sign extension issues (would otherwise try to write smth like 0xFFFFFF80 for 128 (0x80) due to sign extension and then optimize away our load and well.. explode everything :3!)
+      rtx val = gen_reg_rtx (SImode);
+      rtx tmpmaskreg = gen_reg_rtx (SImode);
+      emit_move_insn (tmpmaskreg, GEN_INT ((int32_t)0xFFFF));
+      emit_insn (gen_andsi3 (val, gen_lowpart (SImode, operands[1]), tmpmaskreg));
 
       if (TARGET_UNALIGNED_ACCESS || MEM_ALIGN (operands[0]) >= 32)
       {
@@ -214,7 +218,11 @@
       if (GET_CODE (operands[1]) != REG) {
         operands[1] = force_reg (QImode, operands[1]);
       }
-      rtx val = gen_lowpart (SImode, operands[1]);
+      // fixes some sign extension issues (would otherwise try to write smth like 0xFFFFFF80 for 128 (0x80) due to sign extension and then optimize away our load and well.. explode everything :3!)
+      rtx val = gen_reg_rtx (SImode);
+      rtx tmpmaskreg = gen_reg_rtx (SImode);
+      emit_move_insn (tmpmaskreg, GEN_INT ((int32_t)0xFF));
+      emit_insn (gen_andsi3 (val, gen_lowpart (SImode, operands[1]), tmpmaskreg));
 
       if (TARGET_UNALIGNED_ACCESS || MEM_ALIGN (operands[0]) >= 32)
       {
