@@ -296,7 +296,7 @@ enum reg_class
 
 /* Set this nonzero if move instructions will actually fail to work
    when given unaligned data.  */
-#define STRICT_ALIGNMENT 1
+#define STRICT_ALIGNMENT (!TARGET_UNALIGNED_ACCESS)
 
 /* Generating Code for Profiling */
 #define FUNCTION_PROFILER(FILE,LABELNO) (abort (), 0)
