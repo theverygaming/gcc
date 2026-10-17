@@ -111,8 +111,6 @@ funnyarch_expand_prologue (void)
 {
   rtx insn;
 
-  funnyarch_compute_frame ();
-
   /* push varargs */
   for (int i = 0; i < (crtl->args.pretend_args_size / GET_MODE_SIZE (SImode)); i++)
   {
@@ -209,9 +207,6 @@ funnyarch_expand_epilogue (void)
 /* Implements the macro INITIAL_ELIMINATION_OFFSET, return the OFFSET.  */
 int funnyarch_initial_elimination_offset(int from, int to) {
   int ret;
-
-  /* Compute this since we need to use cfun->machine->local_vars_size.  */
-  funnyarch_compute_frame ();
 
   // stack layout:
   // - caller stack args (rsp at the very entry)
@@ -824,6 +819,9 @@ funnyarch_asm_output_addr_const_extra (FILE *file, rtx x)
 
 #undef TARGET_FRAME_POINTER_REQUIRED
 #define TARGET_FRAME_POINTER_REQUIRED funnyarch_frame_pointer_required
+
+#undef TARGET_COMPUTE_FRAME_LAYOUT
+#define TARGET_COMPUTE_FRAME_LAYOUT funnyarch_compute_frame
 
 #undef TARGET_STATIC_CHAIN
 #define TARGET_STATIC_CHAIN funnyarch_static_chain
