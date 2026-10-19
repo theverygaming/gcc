@@ -1,2 +1,11 @@
 LIBGCC2_DEBUG_CFLAGS = -g0
 LIBGCC2_CFLAGS += -O2 -Dinhibit_libc
+
+LIB1ASMSRC = funnyarch/lib1funcs.S
+LIB1ASMFUNCS = _mulsi3
+
+LIB2ADD = $(srcdir)/divmod.c \
+	  $(srcdir)/udivmod.c \
+	  $(srcdir)/udivmodsi4.c \
+	  $(srcdir)/udivhi3.c \
+	  $(srcdir)/udivmodhi4.c
