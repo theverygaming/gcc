@@ -291,10 +291,18 @@ funnyarch_fixed_condition_code_regs (unsigned int *p1, unsigned int *p2)
 
 static rtx
 funnyarch_function_value (const_tree valtype,
-		      const_tree fntype_or_decl ATTRIBUTE_UNUSED,
+		      const_tree fntype_or_decl,
 		      bool outgoing ATTRIBUTE_UNUSED)
 {
-  return gen_rtx_REG (TYPE_MODE (valtype), FUNNYARCH_R0);
+  machine_mode mode;
+  int unsignedp;
+
+  mode = TYPE_MODE (valtype);
+  if (INTEGRAL_TYPE_P (valtype)) {
+    mode = promote_function_mode (valtype, mode, &unsignedp, fntype_or_decl, 1);
+  }
+
+  return gen_rtx_REG (mode, FUNNYARCH_R0);
 }
 
 /* Define how to find the value returned by a library function.
