@@ -59,7 +59,11 @@
         gcc_unreachable ();
       }
   case 5:
-	  return "mov %0, %1.low\n\tmovh %0, %1.high";
+    if (flag_pic && TARGET_PIC_DATA_TEXT_REL) {
+        return "mov %0, rip\n\tadd %0, %1+4.rel.low\n\taddh %0, %1+8.rel.high";
+    } else {
+        return "mov %0, %1.low\n\tmovh %0, %1.high";
+    }
 	default:
 	  gcc_unreachable ();
       }
